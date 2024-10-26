@@ -70,6 +70,41 @@ class RuleController {
       });
     }
   }
+
+  async modifyRule(req: Request, res: Response): Promise<any> {
+    const { ruleId, ruleString } = req.body;
+
+    try {
+      // retrieve the rule by its ID
+      const rule = await RuleModel.findById(ruleId, {
+        _id: 1,
+        rule: 1,
+        ruleAST: 1,
+      });
+
+      // If rule is not found, return a 404 error
+      if (!rule) {
+        return res.status(404).json({ message: "Rule not found." });
+      }
+
+      const newRule = rule;
+      newRule.rule = ruleString;
+      newRule.ruleAST = ASTManager.parseRuleString(ruleString);
+
+      await RuleModel.updateOne({ _id: ruleId }, newRule);
+
+      // Respond with a success message and the created AST
+      return res.status(200).json({
+        message: "Rule updated successfully.",
+        data: newRule,
+      });
+    } catch (error) {
+      // Handle generic errors
+      return res.status(500).json({
+        message: "An internal server error occurred while modifying the rule.",
+      });
+    }
+  }
 }
 
 export default new RuleController();

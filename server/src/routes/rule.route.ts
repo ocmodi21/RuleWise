@@ -5,5 +5,6 @@ const router = Router();
 
 router.post("/createRule", ruleController.createRule);
 router.post("/evaluateRule", ruleController.evaluateRule);
+router.post("/modifyRule", ruleController.modifyRule);
 
 export default router;
