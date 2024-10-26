@@ -88,6 +88,44 @@ class ASTManager {
 
     return parseExpression();
   }
+
+  evaluateAST(ast: Node | null, data: Record<string, any>): boolean {
+    if (!ast) return false;
+
+    if (ast.type === "operator") {
+      if (!ast.left || !ast.right) return false;
+
+      if (ast.value === "AND") {
+        return (
+          this.evaluateAST(ast.left, data) && this.evaluateAST(ast.right, data)
+        );
+      }
+      if (ast.value === "OR") {
+        return (
+          this.evaluateAST(ast.left, data) || this.evaluateAST(ast.right, data)
+        );
+      }
+    } else if (ast.type === "operand") {
+      const [left, op, right] = ast.value.split(" ");
+      const leftValue = data[left];
+      const rightValue = isNaN(Number(right))
+        ? right.replace(/'/g, "")
+        : Number(right);
+
+      switch (op) {
+        case ">":
+          return leftValue > rightValue;
+        case "<":
+          return leftValue < rightValue;
+        case "=":
+        case "==":
+          return leftValue === rightValue;
+        default:
+          return false;
+      }
+    }
+    return false;
+  }
 }
 
 export default new ASTManager();
