@@ -17,12 +17,15 @@ class RuleController {
       const AST = ASTManager.parseRuleString(ruleString);
 
       // Create a new rule in the database with the parsed AST
-      await RuleModel.create({ rule: ruleString, ruleAST: AST });
+      const rule = await RuleModel.create({ rule: ruleString, ruleAST: AST });
 
       // Respond with a success message and the created AST
       return res.status(201).json({
         message: "Rule created successfully.",
-        data: AST,
+        data: {
+          id: rule._id,
+          ruleString: rule.rule,
+        },
       });
     } catch (error) {
       // Handle generic errors
@@ -57,7 +60,7 @@ class RuleController {
       const isValid = ASTManager.evaluateAST(node, userData);
 
       // Send evaluation result along with rule data
-      return res.json({
+      return res.status(200).json({
         data: {
           rule: rule.rule,
           isValid: isValid,
