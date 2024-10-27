@@ -1,7 +1,7 @@
-const App = () => {
-  return (
-    <div>App</div>
-  )
-}
+import Dashboard from "./pages/Dashboard";
 
-export default App
+const App = () => {
+  return <Dashboard />;
+};
+
+export default App;
