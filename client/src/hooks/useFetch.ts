@@ -2,7 +2,7 @@ export default function useFetch() {
   const httpGet = async (endpoint: string): Promise<any> => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_API_URL}/${endpoint}`,
+        `${import.meta.env.VITE_BASE_URL}/${endpoint}`,
         {
           method: "GET",
           headers: {
@@ -24,7 +24,7 @@ export default function useFetch() {
   const httpPost = async (endpoint: string, data: any): Promise<any> => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_API_URL}/${endpoint}`,
+        `${import.meta.env.VITE_BASE_URL}/${endpoint}`,
         {
           method: "POST",
           headers: {
